@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
-
+import Spinner from "./Spinner";
+import PropTypes from "prop-types";
 let article = {
     status: "ok",
     totalResults: 69,
@@ -41,62 +42,89 @@ let article = {
     ]
 };
 
+
+ 
+
 export class News extends Component {
+    static defaultProps = {
+        country: "us",
+        pageSize: 15,
+        category: "general",
+
+    }
+
+        static propTypes = {
+        country: PropTypes.string,
+        pageSize: PropTypes.number,
+        category: PropTypes.string  }
+
+
     constructor() {
         super();
         this.state = {
             articles: [],
             page: 1,
-            totalResults: 0
-        };
+            totalResults: 0,
+            loading: false
+        }
+        
     }
     async componentDidMount() {
-        let url = `https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&page=1&pageSize=11&apiKey=cb49e71beee64839a0d5dfb8a60b5cc3`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=1&pageSize=${this.props.pageSize}`;
+        this.setState({ loading: true });
         let data = await fetch(url);
         let parsedData = await data.json();
 
         this.setState({
             articles: parsedData.articles,
-            totalResults: parsedData.totalResults
+            totalResults: parsedData.totalResults,
+            loading: false
         });
     }
 
 
     handlePrevpage = async () => {
+        this.setState({ loading: true });
         let prevPage = this.state.page - 1;
-        let url = `https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&page=${prevPage}&pageSize=11&apiKey=cb49e71beee64839a0d5dfb8a60b5cc3`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${prevPage}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
+         
         let parsedData = await data.json();
 
         this.setState({
             page: prevPage,
-            articles: parsedData.articles
+            articles: parsedData.articles,
+            loading: false
         });
     };
 
     handleNextpage = async () => {
+        this.setState({ loading: true });
         let nextPage = this.state.page + 1;
-        let url = `https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&page=${nextPage}&pageSize=11&apiKey=cb49e71beee64839a0d5dfb8a60b5cc3`;
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
+     
         let parsedData = await data.json();
 
         this.setState({
             page: nextPage,
-            articles: parsedData.articles
+            articles: parsedData.articles,
+            loading: false
         });
     };
 
 
 
     render() {
+        
         return (
             <div className="container my-4">
                 <h2 className="text-center mb-4">📰 Top News Headlines</h2>
-
+                {this.state.loading &&  <Spinner />}
                 <div className="row">
-                    {this.state.articles.map((element) => {
+                    {!this.state.loading&&this.state.articles.map((element) => {
 
                         return (
                             <div className="col-md-4 mb-4" key={element.url}>
