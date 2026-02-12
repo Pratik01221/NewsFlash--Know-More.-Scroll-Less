@@ -43,7 +43,7 @@ let article = {
 };
 
 
- 
+
 
 export class News extends Component {
     static defaultProps = {
@@ -53,10 +53,11 @@ export class News extends Component {
 
     }
 
-        static propTypes = {
+    static propTypes = {
         country: PropTypes.string,
         pageSize: PropTypes.number,
-        category: PropTypes.string  }
+        category: PropTypes.string
+    }
 
 
     constructor() {
@@ -67,7 +68,7 @@ export class News extends Component {
             totalResults: 0,
             loading: false
         }
-        
+
     }
     async componentDidMount() {
         let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=1&pageSize=${this.props.pageSize}`;
@@ -83,48 +84,54 @@ export class News extends Component {
     }
 
 
-    handlePrevpage = async () => {
+    async UpdateNews() {
         this.setState({ loading: true });
-        let prevPage = this.state.page - 1;
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${prevPage}&pageSize=${this.props.pageSize}`;
+
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
 
         let data = await fetch(url);
-         
+
         let parsedData = await data.json();
 
         this.setState({
-            page: prevPage,
+
             articles: parsedData.articles,
             loading: false
         });
+
+    }
+
+
+    handlePrevpage = async () => {
+        this.setState(
+            (prevState) => ({ page: prevState.page - 1 }),
+            () => {
+                this.UpdateNews();
+            }
+        );
     };
+
 
     handleNextpage = async () => {
-        this.setState({ loading: true });
-        let nextPage = this.state.page + 1;
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
-
-        let data = await fetch(url);
-     
-        let parsedData = await data.json();
-
-        this.setState({
-            page: nextPage,
-            articles: parsedData.articles,
-            loading: false
-        });
+        this.setState(
+            (prevState) => ({ page: prevState.page + 1 }),
+            () => {
+                this.UpdateNews();
+            }
+        );
     };
+
 
 
 
     render() {
-        
+
         return (
             <div className="container my-4">
                 <h2 className="text-center mb-4">📰 Top News Headlines</h2>
-                {this.state.loading &&  <Spinner />}
+                {this.state.loading && <Spinner />}
                 <div className="row">
-                    {!this.state.loading&&this.state.articles.map((element) => {
+                    {!this.state.loading && this.state.articles.map((element) => {
 
                         return (
                             <div className="col-md-4 mb-4" key={element.url}>
@@ -134,6 +141,9 @@ export class News extends Component {
                                     imageurl={element.urlToImage || "https://images.unsplash.com/photo-1504711434969-e33886168f5c"}
 
                                     newsURL={element.url}
+                                    author={element.author || "Unknown"}
+                                    publishedAt={new Date(element.publishedAt).toGMTString()}
+                                    source={element.source.name}
                                 />
                             </div>
 
