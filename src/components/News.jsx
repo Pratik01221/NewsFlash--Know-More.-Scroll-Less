@@ -60,14 +60,15 @@ export class News extends Component {
     }
 
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             articles: [],
             page: 1,
             totalResults: 0,
             loading: false
         }
+        document.title = `${this.props.category.toUpperCase()} - NEWSFLASH`;
 
     }
     async componentDidMount() {
@@ -128,7 +129,10 @@ export class News extends Component {
 
         return (
             <div className="container my-4">
-                <h2 className="text-center mb-4">📰 Top News Headlines</h2>
+                <h2 className="text-center mb-4">
+  📰 Top News Headlines From {this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)}
+</h2>
+
                 {this.state.loading && <Spinner />}
                 <div className="row">
                     {!this.state.loading && this.state.articles.map((element) => {
