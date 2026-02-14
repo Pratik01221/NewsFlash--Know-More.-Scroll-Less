@@ -19,33 +19,35 @@ export class Navbar extends Component {
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">Home</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/business">Business</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/entertainment">Entertainment</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/health">Health</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/science">Science</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/sports">Sports</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/technology">Technology</Link>
-              </li>
+              <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/business">Business</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/entertainment">Entertainment</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/health">Health</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/science">Science</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/sports">Sports</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/technology">Technology</Link></li>
             </ul>
           </div>
-          <form className="d-flex">
-                <input className="form-control me-2" type="search" placeholder="Search" />
-                <button className="btn btn-outline-success" type="submit">Search</button>
-              </form>
+
+          <form
+            className="d-flex"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const query = e.target.search.value;
+              this.props.setSearchQuery(query);
+            }}
+          >
+            <input
+              className="form-control me-2"
+              type="search"
+              name="search"
+              placeholder="Search"
+            />
+            <button className="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+
         </div>
       </nav>
     );

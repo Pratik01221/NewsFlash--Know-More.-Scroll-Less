@@ -1,51 +1,152 @@
-import './App.css'
-import Navbar from './components/Navbar'
-import News from './components/News'
+import React, { Component } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import News from "./components/News";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoadingBar from "react-top-loading-bar";
 
-function App() {
-  // const pageSize = 12;
-  return (
-    <Router>
-      <Navbar />
+export default class App extends Component {
+  state = {
+    progress: 0,
+    searchQuery: "",
 
-      <Routes>
-        <Route exact path="/" element={<News country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="general" pageSize={6} />} />
-        <Route exact path="/business"
-          element={<News key="business" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="business" pageSize={6} />}
-        />
-        <Route exact
-          path="/entertainment"
-          element={<News key="entertainment" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="entertainment" pageSize={6} />}
-        />
-        <Route exact
-          path="/health"
-          element={<News key="health" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="health" pageSize={6} />}
-        />
-        <Route exact
-          path="/science"
-          element={<News key="science" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="science" pageSize={6} />}
-        />
-        <Route exact
-          path="/sports"
-          element={<News key="sports" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="sports" pageSize={6} />}
-        />
-        <Route exact
-          path="/technology"
-          element={<News key="technology" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="technology" pageSize={6} />}
-        />
-        <Route exact
-          path="/sports"
-          element={<News key="sports" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="sports" pageSize={6} />}
-        />
-        <Route exact
-          path="/technology"
-          element={<News key="technology" country="us" apiKey="ffb31b1f8cab4624abb72f6a6c81ca6a" category="technology" pageSize={6} />}
-        />
-      </Routes>
+  };
 
-    </Router>
-  )
+  setProgress = (progress) => {
+    this.setState({ progress: progress });
+  };
+
+  setSearchQuery = (searchQuery) => {
+    this.setState({ searchQuery: searchQuery });
+  };
+
+  
+
+  
+  render() {
+    return (
+      <Router>
+        <LoadingBar
+          color="#f11946"
+          progress={this.state.progress}
+          onLoaderFinished={() => this.setState({ progress: 0 })}
+        />
+
+        <Navbar setSearchQuery={this.setSearchQuery} />
+
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="general"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/business"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="business"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="business"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/entertainment"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="entertainment"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="entertainment"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/health"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="health"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="health"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/science"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="science"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="science"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/sports"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="sports"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="sports"
+                pageSize={6}
+              />
+            }
+          />
+
+          <Route
+            exact
+            path="/technology"
+            element={
+              <News
+              searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
+                key="technology"
+                country="us"
+                apiKey="dc7782e7084748928e912fb25791f3e2"
+                category="technology"
+                pageSize={6}
+              />
+            }
+          />
+        </Routes>
+      </Router>
+    );
+  }
 }
-
-export default App
