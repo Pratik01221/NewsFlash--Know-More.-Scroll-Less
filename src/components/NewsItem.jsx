@@ -22,15 +22,15 @@ export class NewsItem extends Component {
         </span>
 
         <img
-  src={
-    imageurl && imageurl !== "null"
-      ? imageurl
-      : "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
-  }
-  className="card-img-top"
-  alt="news"
-  style={{ height: "200px", objectFit: "cover" }}
-/>
+          src={
+            imageurl && imageurl !== "null"
+              ? imageurl
+              : "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
+          }
+          className="card-img-top"
+          alt="news"
+          style={{ height: "200px", objectFit: "cover" }}
+        />
 
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">
@@ -46,18 +46,22 @@ export class NewsItem extends Component {
           <p className="card-text mt-auto">
             <small className="text-muted">
               By {author || "Unknown"} on{" "}
-              {publishedAt ? new Date(publishedAt).toGMTString() : ""}
+              {publishedAt
+                ? new Date(publishedAt).toGMTString()
+                : "Unknown date"}
             </small>
           </p>
 
-          <a
-            href={newsURL}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-success btn-sm mt-2"
-          >
-            Read More
-          </a>
+          {newsURL && (
+            <a
+              href={newsURL}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-success btn-sm mt-2"
+            >
+              Read More
+            </a>
+          )}
         </div>
       </div>
     );

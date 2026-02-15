@@ -3,6 +3,10 @@ import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
+import newsData from "../data";
+
+ 
+
 
 export class News extends Component {
   static defaultProps = {
@@ -42,61 +46,79 @@ export class News extends Component {
     }
   }
 
-fetchNews = async () => {
-  try {
-    const apiKey = import.meta.env.VITE_GNEWS_API;
-    
-    this.setState({ loading: true });
-    this.props.setProgress(20);
+  // fetchNews = async () => {
+  //   try {
+  //     const apiKey = import.meta.env.VITE_NEWS_API;
 
-    let url;
-    if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-      url = `https://gnews.io/api/v4/search?q=${this.props.searchQuery}&lang=en&max=${this.props.pageSize}&page=1&apikey=${apiKey}`;
-    } else {
-      url = `https://gnews.io/api/v4/top-headlines?country=${this.props.country}&category=${this.props.category}&max=${this.props.pageSize}&page=1&apikey=${apiKey}`;
-    }
+  //     this.setState({ loading: true });
+  //     this.props.setProgress(20);
 
-    const data = await fetch(url);
-    const parsedData = await data.json();
+  //     let url;
 
-    this.setState({
-      articles: parsedData.articles || [],
-      totalResults: parsedData.totalArticles || 0,
-      loading: false,
-      page: 1,
-    });
+  //     if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
+  //       url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+  //         this.props.searchQuery
+  //       )}&pageSize=${this.props.pageSize}&page=1&apiKey=${apiKey}`;
+  //     } else {
+  //       url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&pageSize=${this.props.pageSize}&page=1&apiKey=${apiKey}`;
+  //     }
 
-    this.props.setProgress(100);
-  } catch (error) {
-    console.error(error);
-    this.setState({ loading: false });
-    this.props.setProgress(100);
-  }
-};
+  //     const response = await fetch(url);
+  //     const parsedData = await response.json();
 
+  //     this.setState({
+  //       articles: parsedData.articles || [],
+  //       totalResults: parsedData.totalResults || 0,
+  //       loading: false,
+  //       page: 1,
+  //     });
 
-fetchMoreData = async () => {
-  const apiKey = import.meta.env.VITE_GNEWS_API;
-  const nextPage = this.state.page + 1;
+  //     this.props.setProgress(100);
+  //   } catch (error) {
+  //     console.error(error);
+  //     this.setState({ loading: false });
+  //     this.props.setProgress(100);
+  //   }
+  // };
 
-  let url;
-  if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-    url = `https://gnews.io/api/v4/search?q=${this.props.searchQuery}&lang=en&max=${this.props.pageSize}&page=${nextPage}&apikey=${apiKey}`;
-  } else {
-    url = `https://gnews.io/api/v4/top-headlines?country=${this.props.country}&category=${this.props.category}&max=${this.props.pageSize}&page=${nextPage}&apikey=${apiKey}`;
-  }
-
-  const data = await fetch(url);
-  const parsedData = await data.json();
+  fetchNews = () => {
+  const filteredArticles = newsData.articles.filter(
+    (article) =>
+      article.category === this.props.category
+  );
 
   this.setState({
-    page: nextPage,
-    articles: this.state.articles.concat(parsedData.articles || []),
-    totalResults:
-      parsedData.totalArticles || this.state.totalResults,
+    articles: filteredArticles,
+    totalResults: filteredArticles.length,
+    loading: false,
+    page: 1,
   });
 };
 
+  fetchMoreData = async () => {
+    const apiKey = import.meta.env.VITE_NEWS_API;
+    const nextPage = this.state.page + 1;
+
+    let url;
+
+    if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
+      url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+        this.props.searchQuery
+      )}&pageSize=${this.props.pageSize}&page=${nextPage}&apiKey=${apiKey}`;
+    } else {
+      url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&pageSize=${this.props.pageSize}&page=${nextPage}&apiKey=${apiKey}`;
+    }
+
+    const response = await fetch(url);
+    const parsedData = await response.json();
+
+    this.setState({
+      page: nextPage,
+      articles: this.state.articles.concat(parsedData.articles || []),
+      totalResults:
+        parsedData.totalResults || this.state.totalResults,
+    });
+  };
 
   render() {
     return (
