@@ -42,69 +42,61 @@ export class News extends Component {
     }
   }
 
-  fetchNews = async () => {
-    try {
-      const apiKey = import.meta.env.VITE_NEWS_API;
-
-      this.setState({ loading: true });
-      this.props.setProgress(10);
-
-      let url;
-
-      if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-        url = `https://newsapi.org/v2/everything?q=${this.props.searchQuery}&apiKey=${apiKey}&page=1&pageSize=${this.props.pageSize}`;
-      } else {
-        url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&page=1&pageSize=${this.props.pageSize}`;
-      }
-
-      this.props.setProgress(40);
-
-      const data = await fetch(url);
-      const parsedData = await data.json();
-
-      this.props.setProgress(70);
-
-      this.setState({
-        articles: parsedData.articles || [],
-        totalResults: parsedData.totalResults || 0,
-        loading: false,
-        page: 1,
-      });
-
-      this.props.setProgress(100);
-    } catch (error) {
-      console.error(error);
-      this.setState({ loading: false });
-      this.props.setProgress(100);
-    }
-  };
-
-  fetchMoreData = async () => {
-    const apiKey = import.meta.env.VITE_NEWS_API;
-    const nextPage = this.state.page + 1;
-
+fetchNews = async () => {
+  try {
+    const apiKey = import.meta.env.VITE_GNEWS_API;
+    
+    this.setState({ loading: true });
     this.props.setProgress(20);
 
     let url;
-
     if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-      url = `https://newsapi.org/v2/everything?q=${this.props.searchQuery}&apiKey=${apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
+      url = `https://gnews.io/api/v4/search?q=${this.props.searchQuery}&lang=en&max=${this.props.pageSize}&page=1&apikey=${apiKey}`;
     } else {
-      url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
+      url = `https://gnews.io/api/v4/top-headlines?country=${this.props.country}&category=${this.props.category}&max=${this.props.pageSize}&page=1&apikey=${apiKey}`;
     }
 
     const data = await fetch(url);
     const parsedData = await data.json();
 
     this.setState({
-      page: nextPage,
-      articles: this.state.articles.concat(parsedData.articles || []),
-      totalResults:
-        parsedData.totalResults || this.state.totalResults,
+      articles: parsedData.articles || [],
+      totalResults: parsedData.totalArticles || 0,
+      loading: false,
+      page: 1,
     });
 
     this.props.setProgress(100);
-  };
+  } catch (error) {
+    console.error(error);
+    this.setState({ loading: false });
+    this.props.setProgress(100);
+  }
+};
+
+
+fetchMoreData = async () => {
+  const apiKey = import.meta.env.VITE_GNEWS_API;
+  const nextPage = this.state.page + 1;
+
+  let url;
+  if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
+    url = `https://gnews.io/api/v4/search?q=${this.props.searchQuery}&lang=en&max=${this.props.pageSize}&page=${nextPage}&apikey=${apiKey}`;
+  } else {
+    url = `https://gnews.io/api/v4/top-headlines?country=${this.props.country}&category=${this.props.category}&max=${this.props.pageSize}&page=${nextPage}&apikey=${apiKey}`;
+  }
+
+  const data = await fetch(url);
+  const parsedData = await data.json();
+
+  this.setState({
+    page: nextPage,
+    articles: this.state.articles.concat(parsedData.articles || []),
+    totalResults:
+      parsedData.totalArticles || this.state.totalResults,
+  });
+};
+
 
   render() {
     return (

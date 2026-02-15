@@ -1,50 +1,67 @@
 import React, { Component } from "react";
 
 export class NewsItem extends Component {
-    render() {
-        let { title, description, imageurl, newsURL, author, publishedAt, source } =
-            this.props;
-        return (
-            <div>
-                <div className="card my-5">
-                    <div>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                                position: "absolute",
-                                right: "0",
-                            }}
-                        >
-                            <span className="bg-danger badge rounded-pill">{source}</span>
-                        </div>
-                    </div>
-                    <img src={imageurl} className="card-img-top" alt="card..." />
-                    <div className="card-header">
+  render() {
+    let {
+      title,
+      description,
+      imageurl,
+      newsURL,
+      author,
+      publishedAt,
+      source,
+    } = this.props;
 
-                    </div>
+    return (
+      <div className="card my-4 h-100 position-relative">
+        <span
+          className="badge bg-danger rounded-pill position-absolute"
+          style={{ top: "10px", right: "10px", zIndex: 1 }}
+        >
+          {source || "Unknown"}
+        </span>
 
-                    <div className="card-body">
-                        <h4 className="card-title">{title}</h4>
-                        <p className="card-text">{description}</p>
-                        <p className="card-text">
-                            <small className="text-muted">
-                                By {author} On {publishedAt}
-                            </small>
-                        </p>
+        <img
+  src={
+    imageurl && imageurl !== "null"
+      ? imageurl
+      : "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
+  }
+  className="card-img-top"
+  alt="news"
+  style={{ height: "200px", objectFit: "cover" }}
+/>
 
-                        <a
-                            href={newsURL}
-                            target="_blank"
-                            className="btn btn-success btn-sm"
-                        >
-                            Read More
-                        </a>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title">
+            {title ? title.slice(0, 70) : "No Title Available"}
+          </h5>
+
+          <p className="card-text">
+            {description
+              ? description.slice(0, 120)
+              : "No description available."}
+          </p>
+
+          <p className="card-text mt-auto">
+            <small className="text-muted">
+              By {author || "Unknown"} on{" "}
+              {publishedAt ? new Date(publishedAt).toGMTString() : ""}
+            </small>
+          </p>
+
+          <a
+            href={newsURL}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-success btn-sm mt-2"
+          >
+            Read More
+          </a>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default NewsItem;
