@@ -15,7 +15,6 @@ export class News extends Component {
     country: PropTypes.string,
     pageSize: PropTypes.number,
     category: PropTypes.string,
-    apiKey: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -45,18 +44,25 @@ export class News extends Component {
 
   fetchNews = async () => {
     try {
+      const apiKey = import.meta.env.VITE_NEWS_API;
+
       this.setState({ loading: true });
+      this.props.setProgress(10);
 
       let url;
 
       if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-        url = `https://newsapi.org/v2/top-headlines?q=${this.props.searchQuery}&country=us&apiKey=${this.props.apiKey}&page=1&pageSize=${this.props.pageSize}`;
+        url = `https://newsapi.org/v2/everything?q=${this.props.searchQuery}&apiKey=${apiKey}&page=1&pageSize=${this.props.pageSize}`;
       } else {
-        url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=1&pageSize=${this.props.pageSize}`;
+        url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&page=1&pageSize=${this.props.pageSize}`;
       }
 
-      let data = await fetch(url);
-      let parsedData = await data.json();
+      this.props.setProgress(40);
+
+      const data = await fetch(url);
+      const parsedData = await data.json();
+
+      this.props.setProgress(70);
 
       this.setState({
         articles: parsedData.articles || [],
@@ -64,31 +70,40 @@ export class News extends Component {
         loading: false,
         page: 1,
       });
+
+      this.props.setProgress(100);
     } catch (error) {
       console.error(error);
       this.setState({ loading: false });
+      this.props.setProgress(100);
     }
   };
 
   fetchMoreData = async () => {
+    const apiKey = import.meta.env.VITE_NEWS_API;
     const nextPage = this.state.page + 1;
+
+    this.props.setProgress(20);
 
     let url;
 
     if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
-      url = `https://newsapi.org/v2/top-headlines?q=${this.props.searchQuery}&country=us&apiKey=${this.props.apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
+      url = `https://newsapi.org/v2/everything?q=${this.props.searchQuery}&apiKey=${apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
     } else {
-      url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
+      url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${apiKey}&page=${nextPage}&pageSize=${this.props.pageSize}`;
     }
 
-    let data = await fetch(url);
-    let parsedData = await data.json();
+    const data = await fetch(url);
+    const parsedData = await data.json();
 
     this.setState({
       page: nextPage,
       articles: this.state.articles.concat(parsedData.articles || []),
-      totalResults: parsedData.totalResults || 0,
+      totalResults:
+        parsedData.totalResults || this.state.totalResults,
     });
+
+    this.props.setProgress(100);
   };
 
   render() {
@@ -106,8 +121,7 @@ export class News extends Component {
           dataLength={this.state.articles.length}
           next={this.fetchMoreData}
           hasMore={
-            this.state.page <
-            Math.ceil((this.state.totalResults || 0) / this.props.pageSize)
+            this.state.articles.length < this.state.totalResults
           }
           loader={<Spinner />}
         >
@@ -135,7 +149,7 @@ export class News extends Component {
                     publishedAt={new Date(
                       element.publishedAt
                     ).toGMTString()}
-                    source={element.source.name}
+                    source={element.source?.name}
                   />
                 </div>
               ))}
@@ -146,7 +160,8 @@ export class News extends Component {
         <div className="text-center mt-4 fw-semibold">
           Page {this.state.page} of{" "}
           {Math.ceil(
-            (this.state.totalResults || 0) / this.props.pageSize
+            (this.state.totalResults || 0) /
+              this.props.pageSize
           )}
         </div>
       </>

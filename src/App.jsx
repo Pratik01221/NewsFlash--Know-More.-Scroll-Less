@@ -9,20 +9,16 @@ export default class App extends Component {
   state = {
     progress: 0,
     searchQuery: "",
-
   };
 
   setProgress = (progress) => {
-    this.setState({ progress: progress });
+    this.setState({ progress });
   };
 
   setSearchQuery = (searchQuery) => {
-    this.setState({ searchQuery: searchQuery });
+    this.setState({ searchQuery });
   };
 
-  
-
-  
   render() {
     return (
       <Router>
@@ -36,14 +32,12 @@ export default class App extends Component {
 
         <Routes>
           <Route
-            exact
             path="/"
             element={
               <News
-              searchQuery={this.state.searchQuery}
+                searchQuery={this.state.searchQuery}
                 setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="general"
                 pageSize={6}
               />
@@ -51,15 +45,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/business"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="business"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="business"
                 pageSize={6}
               />
@@ -67,15 +59,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/entertainment"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="entertainment"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="entertainment"
                 pageSize={6}
               />
@@ -83,15 +73,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/health"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="health"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="health"
                 pageSize={6}
               />
@@ -99,15 +87,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/science"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="science"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="science"
                 pageSize={6}
               />
@@ -115,15 +101,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/sports"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="sports"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="sports"
                 pageSize={6}
               />
@@ -131,15 +115,13 @@ export default class App extends Component {
           />
 
           <Route
-            exact
             path="/technology"
             element={
               <News
-              searchQuery={this.state.searchQuery}
-                setProgress={this.setProgress}
                 key="technology"
+                searchQuery={this.state.searchQuery}
+                setProgress={this.setProgress}
                 country="us"
-                apiKey="dc7782e7084748928e912fb25791f3e2"
                 category="technology"
                 pageSize={6}
               />
