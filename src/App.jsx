@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar";
 import News from "./components/News";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
+
+import Footer from "./components/footer";   
  
 
 
@@ -129,8 +131,13 @@ export default class App extends Component {
               />
             }
           />
+           
+           
+
         </Routes>
+        <Footer />
       </Router>
+
     );
   }
 }

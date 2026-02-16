@@ -86,11 +86,21 @@ export class News extends Component {
   //   }
   // };
 
-  fetchNews = () => {
-  const filteredArticles = newsData.articles.filter(
-    (article) =>
-      article.category === this.props.category
-  );
+fetchNews = () => {
+  this.props.setProgress(20);
+
+  let filteredArticles = newsData.articles.filter((article) => {
+    const matchesCategory =
+      article.category === this.props.category;
+
+    const matchesSearch =
+      !this.props.searchQuery ||
+      article.title
+        ?.toLowerCase()
+        .includes(this.props.searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
 
   this.setState({
     articles: filteredArticles,
@@ -98,12 +108,15 @@ export class News extends Component {
     loading: false,
     page: 1,
   });
+
+  this.props.setProgress(100);
 };
+
 
   fetchMoreData = async () => {
     const apiKey = import.meta.env.VITE_NEWS_API;
     const nextPage = this.state.page + 1;
-
+    this.props.setProgress(20);
     let url;
 
     if (this.props.searchQuery && this.props.searchQuery.trim() !== "") {
@@ -113,7 +126,7 @@ export class News extends Component {
     } else {
       url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&pageSize=${this.props.pageSize}&page=${nextPage}&apiKey=${apiKey}`;
     }
-
+    this.props.setProgress(50);
     const response = await fetch(url);
     const parsedData = await response.json();
 
@@ -123,6 +136,7 @@ export class News extends Component {
       totalResults:
         parsedData.totalResults || this.state.totalResults,
     });
+    this.props.setProgress(100);
   };
 
   render() {

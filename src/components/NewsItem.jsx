@@ -14,7 +14,7 @@ export class NewsItem extends Component {
     } = this.props;
 
     return (
-      <div className="card my-4 h-100 position-relative">
+      <div className="card my-4 h-80 position-relative">
         <span
           className="badge bg-danger rounded-pill position-absolute"
           style={{ top: "10px", right: "10px", zIndex: 1 }}

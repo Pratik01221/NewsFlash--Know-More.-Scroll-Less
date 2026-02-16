@@ -2074,7 +2074,8 @@ export const newsData = {
       publishedAt: "2022-04-19T23:55:52Z",
       content:
         "Shes the fan favourite whose love story captivated viewers but if this scene had made it to air, there may have been a very different outcome for Domenica.There was certainly more than enough scandal\u2026 [+2422 chars]",
-    },
+   
+     category: "science"  },
     {
       source: { id: null, name: "Daily Mail" },
       author: "Adam S. Levy",
