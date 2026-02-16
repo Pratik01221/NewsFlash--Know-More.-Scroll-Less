@@ -3,10 +3,15 @@ import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
 import InfiniteScroll from "react-infinite-scroll-component";
-import newsData from "../data";
+// import newsData from "../data.jsx";
+import { newsData } from "../data";
+
+
+
+
 
  
-
+console.log("CHECK DATA:", newsData);
 
 export class News extends Component {
   static defaultProps = {
@@ -24,7 +29,7 @@ export class News extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      articles: [],
+      articles: newsData.articles || [],
       page: 1,
       totalResults: 0,
       loading: false,
@@ -128,6 +133,7 @@ export class News extends Component {
           {this.props.category.charAt(0).toUpperCase() +
             this.props.category.slice(1)}
         </h2>
+        
 
         {this.state.loading && <Spinner />}
 
@@ -164,6 +170,7 @@ export class News extends Component {
                       element.publishedAt
                     ).toGMTString()}
                     source={element.source?.name}
+                    category={element.category || this.props.category}
                   />
                 </div>
               ))}

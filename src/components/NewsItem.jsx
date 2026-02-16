@@ -10,6 +10,7 @@ export class NewsItem extends Component {
       author,
       publishedAt,
       source,
+      category= "general",
     } = this.props;
 
     return (
@@ -19,6 +20,9 @@ export class NewsItem extends Component {
           style={{ top: "10px", right: "10px", zIndex: 1 }}
         >
           {source || "Unknown"}
+          {category && (
+            <span className="ms-2">{category}</span>
+          )}
         </span>
 
         <img
